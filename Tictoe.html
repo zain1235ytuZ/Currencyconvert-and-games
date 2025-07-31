@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic Tac Toe Game</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+        }
+
+        .game-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .game-board {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-gap: 10px;
+            max-width: 300px;
+            margin: 0 auto 2rem;
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .box {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(145deg, #ffffff, #e6e6e6);
+            border: none;
+            border-radius: 12px;
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 
+                0 4px 8px rgba(0, 0, 0, 0.1),
+                0 2px 4px rgba(0, 0, 0, 0.06);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .box:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 8px 16px rgba(0, 0, 0, 0.15),
+                0 4px 8px rgba(0, 0, 0, 0.1);
+            background: linear-gradient(145deg, #f8f9ff, #e8e9f3);
+        }
+
+        .box:active {
+            transform: translateY(0);
+            box-shadow: 
+                0 2px 4px rgba(0, 0, 0, 0.1),
+                inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .box:disabled {
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
+
+        .box:disabled:hover {
+            transform: none;
+            box-shadow: 
+                0 4px 8px rgba(0, 0, 0, 0.1),
+                0 2px 4px rgba(0, 0, 0, 0.06);
+        }
+
+        /* Styling for X and O */
+        .box {
+            color: #667eea;
+        }
+
+        .box:contains("X") {
+            color: #e74c3c;
+        }
+
+        .box:contains("O") {
+            color: #3498db;
+        }
+
+        /* Button Container */
+        .button-container {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.8rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .new {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+        }
+
+        .new:hover {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(46, 204, 113, 0.3);
+        }
+
+        .reset {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+        }
+
+        .reset:hover {
+            background: linear-gradient(135deg, #c0392b, #a93226);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(231, 76, 60, 0.3);
+        }
+
+        /* Message Container */
+        .msg-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 1;
+            visibility: visible;
+            transition: all 0.3s ease;
+        }
+
+        .msg-container.hide {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .msg-content {
+            background: linear-gradient(135deg, #ffffff, #f8f9fa);
+            padding: 3rem 2rem;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            transform: scale(1);
+            transition: transform 0.3s ease;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .msg-container.hide .msg-content {
+            transform: scale(0.8);
+        }
+
+        .msg {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .celebration {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            animation: bounce 1s infinite alternate;
+        }
+
+        @keyframes bounce {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-10px); }
+        }
+
+        /* Turn Indicator */
+        .turn-indicator {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .current-player {
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 480px) {
+            .game-container {
+                padding: 1.5rem;
+                margin: 1rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .box {
+                width: 70px;
+                height: 70px;
+                font-size: 1.8rem;
+            }
+
+            .game-board {
+                max-width: 250px;
+            }
+
+            .btn {
+                padding: 0.7rem 1.5rem;
+                font-size: 0.9rem;
+            }
+
+            .msg {
+                font-size: 1.3rem;
+            }
+
+            .msg-content {
+                padding: 2rem 1.5rem;
+            }
+        }
+
+        /* Animation for winning */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .winner-box {
+            animation: pulse 0.6s ease-in-out infinite;
+            background: linear-gradient(145deg, #d4edda, #c3e6cb) !important;
+            color: #155724 !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>🎮 Tic Tac Toe</h1>
+        
+        <div class="turn-indicator">
+            <span>Current Player: <span class="current-player" id="current-turn">O</span></span>
+        </div>
+
+        <div class="game-board">
+            <button class="box"></button>
+            <button class="box"></button>
+            <button class="box"></button>
+            <button class="box"></button>
+            <button class="box"></button>
+            <button class="box"></button>
+            <button class="box"></button>
+            <button class="box"></button>
+            <button class="box"></button>
+        </div>
+
+        <div class="button-container">
+            <button class="btn new">New Game</button>
+            <button class="btn reset">Reset Game</button>
+        </div>
+    </div>
+
+    <!-- Message Container for Winner Display -->
+    <div class="msg-container hide">
+        <div class="msg-content">
+            <div class="celebration">🎉</div>
+            <div class="msg">Congratulations! Winner is O</div>
+            <button class="btn new">Play Again</button>
+        </div>
+    </div>
+
+    <script>
+        let boxes = document.querySelectorAll(".box"); 
+        let newGameBtn = document.querySelector(".new"); 
+        let resetBtn = document.querySelector(".reset"); 
+        let msgContainer = document.querySelector(".msg-container"); 
+        let msg = document.querySelector(".msg"); 
+        let currentTurnDisplay = document.getElementById("current-turn");
+         
+        let turnO = true;  
+         
+        const winPatterns = [ 
+            [0, 1, 2], 
+            [0, 3, 6],  
+            [0, 4, 8],  
+            [1, 4, 7], 
+            [2, 5, 8], 
+            [2, 4, 6], 
+            [3, 4, 5],  
+            [6, 7, 8] 
+        ]; 
+
+        // Update turn indicator
+        const updateTurnIndicator = () => {
+            currentTurnDisplay.textContent = turnO ? "O" : "X";
+            currentTurnDisplay.style.color = turnO ? "#3498db" : "#e74c3c";
+        };
+         
+        boxes.forEach((box) => { 
+            box.addEventListener("click", () => { 
+                if (box.innerText === "") { 
+                    box.innerText = turnO ? "O" : "X"; 
+                    box.style.color = turnO ? "#3498db" : "#e74c3c";
+                    turnO = !turnO; 
+                    updateTurnIndicator();
+                    checkWinner(); 
+                } 
+            }); 
+        }); 
+         
+        const disableBoxes = () => { 
+            boxes.forEach((box) => (box.disabled = true)); 
+        }; 
+         
+        const enableBoxes = () => { 
+            boxes.forEach((box) => { 
+                box.innerText = ""; 
+                box.disabled = false; 
+                box.classList.remove("winner-box");
+                box.style.color = "#667eea";
+            }); 
+        }; 
+         
+        const showWinner = (winner) => { 
+            msg.innerHTML = `<div class="celebration">🎉</div>Congratulations! The winner is ${winner}`; 
+            msgContainer.classList.remove("hide"); 
+        }; 
+
+        const highlightWinningPattern = (pattern) => {
+            pattern.forEach(index => {
+                boxes[index].classList.add("winner-box");
+            });
+        };
+         
+        const checkWinner = () => { 
+            for (let pattern of winPatterns) { 
+                let [a, b, c] = pattern; 
+                let pos1 = boxes[a].innerText; 
+                let pos2 = boxes[b].innerText; 
+                let pos3 = boxes[c].innerText; 
+         
+                if (pos1 !== "" && pos1 === pos2 && pos2 === pos3) { 
+                    console.log(`Winner is: ${pos1}`); 
+                    showWinner(pos1); 
+                    highlightWinningPattern(pattern);
+                    disableBoxes(); 
+                    return; 
+                } 
+            }
+
+            // Check for draw
+            let isDraw = true;
+            boxes.forEach(box => {
+                if (box.innerText === "") {
+                    isDraw = false;
+                }
+            });
+
+            if (isDraw) {
+                msg.innerHTML = `<div class="celebration">🤝</div>It's a Draw! Well played!`;
+                msgContainer.classList.remove("hide");
+            }
+        }; 
+         
+        const resetGame = () => { 
+            turnO = true; 
+            enableBoxes(); 
+            updateTurnIndicator();
+            msgContainer.classList.add("hide"); 
+        }; 
+         
+        newGameBtn.addEventListener("click", resetGame); 
+        resetBtn.addEventListener("click", resetGame);
+
+        // Add click event to "Play Again" button in modal
+        document.querySelector(".msg-content .new").addEventListener("click", resetGame);
+
+        // Initialize turn indicator
+        updateTurnIndicator();
+    </script>
+</body>
+</html>

@@ -1,0 +1,85 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>currencey converter</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<link rel="stylesheet" href="currency.css">
+<body>
+    <div class="container">
+    <h1>currency converter</h1>
+  <form action="">
+    <div class="amount">
+        <p>Enter amount:</p>
+        <input value="100" type="number" id="amount" name="amount">
+
+    </div>
+    <div class="drop">
+        <div class="from">
+            <p>From</p>
+                 <div class="form">  
+                <img src="https://flagsapi.com/PK/flat/64.png" alt="">
+                <select  name="from">
+                  <option value="USD">USD</option>
+                  <option value="PKR"> PKR</option>
+                    <option value="AED">AE</option>
+                    <option value="AFN"> AF</option>
+                    <option value="XCD"> AG</option>
+                    <option value="ALL"> AL</option>
+                    <option value="AMD"> AM</option>
+                    <option value="ANG"> AN</option>
+                    <option value="AOA"> AO</option>
+                    <option value="AQD"> AQ</option>
+                    <option value="ARS"> AR</option>
+                    
+                  </select>
+                </div>   
+           
+        </div>
+        <i class="fa-solid fa-arrow-right-arrow-left"></i>
+        <div class="To">  
+          
+            <P>TO</P>
+            <div class="form">
+            <img src="https://flagsapi.com/US/flat/64.png" alt="">
+            <select name="from">
+                <option value="AED"> AE</option>
+                <option value="AFN"> AF</option>
+                <option value="XCD"> AG</option>
+                <option value="ALL">  AL</option>
+                <option value="AMD"> AM</option>
+                <option value="ANG">AN</option>
+                <option value="AOA">AO</option>
+                <option value="AQD"> AQ</option>
+                <option value="ARS"> AR</option>
+                <option value="AUD"> AU</option>
+                <option value="AZN"> AZ</option>
+                <option value="BAM">BA</option>
+             
+              </select>
+            </div> 
+        </div>
+        </div>
+        <div class="msg">
+            1USD=279.03PKR
+          </div>
+          <button>Get Exchange rate</button> 
+    </div>
+   
+  </form>
+</div>
+<script src="country.js"></script>
+<script src="currency.js"></script>
+</body>
+</html>
+
+
+
+
+
+
